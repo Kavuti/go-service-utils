@@ -1,0 +1,80 @@
+syntax = "proto3";
+option go_package = "github.com/Kavuti/{{ .ProjectName }}/gen/proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "proto/users.proto";
+
+
+message {{ .EntityName }} {
+    // TODO: Add fields
+}
+
+message Get{{ .EntityName }}Request {
+    // TODO: Add fields
+}
+
+message Get{{ .EntityName }}Response {
+    {{ .EntityName }} {{ .EntityName | ToLower }} = 1;
+}
+
+message Create{{ .EntityName }}Request {
+    // TODO: Add fields
+}
+
+message Create{{ .EntityName }}Response {
+    {{ .EntityName }} {{ .EntityName | ToLower }} = 1;
+}
+
+message Update{{ .EntityName }}Request {
+    // TODO: Add fields
+}
+
+message Update{{ .EntityName }}Response {
+    {{ .EntityName }} {{ .EntityName | ToLower }} = 1;
+}
+
+message Delete{{ .EntityName }}Request {
+    // TODO: Add fields
+}
+
+message List{{ .EntityName }}sRequest {
+    // TODO: Add fields
+}
+
+message List{{ .EntityName }}sResponse {
+    repeated {{ .EntityName }} {{ .EntityName | ToLower }}s = 1;
+}
+
+service {{ .EntityName }}Service {
+    rpc List{{ .EntityName }}s(List{{ .EntityName }}sRequest) returns (List{{ .EntityName }}sResponse) {
+        option (google.api.http) = {
+            get: "/{{ .EntityName | ToLower }}s"
+        };
+    }
+
+    rpc Get{{ .EntityName }}(Get{{ .EntityName }}Request) returns (Get{{ .EntityName }}Response) {
+        option (google.api.http) = {
+            get: "/{{ .EntityName | ToLower }}s/{id}"
+        };
+    }
+
+    rpc Create{{ .EntityName }}(Create{{ .EntityName }}Request) returns (Create{{ .EntityName }}Response) {
+        option (google.api.http) = {
+            post: "/{{ .EntityName | ToLower }}s"
+            body: "*"
+        };
+    }
+
+    rpc Update{{ .EntityName }}(Update{{ .EntityName }}Request) returns (Update{{ .EntityName }}Response) {
+        option (google.api.http) = {
+            put: "/{{ .EntityName | ToLower }}s/{id}"
+            body: "*"
+        };
+    }
+
+    rpc Delete{{ .EntityName }}(Delete{{ .EntityName }}Request) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/{{ .EntityName | ToLower }}s/{id}"
+        };
+    }
+}

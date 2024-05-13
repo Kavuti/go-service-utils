@@ -1,0 +1,83 @@
+package service
+
+import (
+	"context"
+
+	"github.com/Kavuti/go-template-test/gen/proto"
+	"github.com/Kavuti/go-template-test/sqlc"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/emptypb"
+)
+
+type {{ .EntityName }}ServiceServer struct {
+	q      *sqlc.Queries
+	logger *zap.SugaredLogger
+}
+
+func New{{ .EntityName }}ServiceServer(logger *zap.SugaredLogger, dbpool *pgxpool.Pool) *{{ .EntityName }}ServiceServer {
+	return &{{ .EntityName }}ServiceServer{
+		q:      sqlc.New(dbpool),
+		logger: logger,
+	}
+}
+func (s *{{ .EntityName }}ServiceServer) List{{ .EntityName }}s(ctx context.Context, request *proto.List{{ .EntityName }}sRequest) (*proto.List{{ .EntityName }}sResponse, error) {
+	params := sqlc.List{{ .EntityName }}sParams{
+		Limit:  request.Limit,
+		Offset: request.Offset,
+	}
+	{{ .EntityName | ToLower }}s, err := s.q.List{{ .EntityName }}s(context.TODO(), params)
+	if err != nil {
+		return nil, err
+	}
+
+	var {{ .EntityName | ToLower }}sPb []*proto.{{ .EntityName }}
+	for _, {{ .EntityName | ToLower }} := range {{ .EntityName | ToLower }}s {
+		{{ .EntityName | ToLower }}sPb = append({{ .EntityName | ToLower }}sPb, {{ .EntityName | ToLower }}.Pb())
+	}
+	return &proto.List{{ .EntityName }}sResponse{ {{ .EntityName }}s: {{ .EntityName | ToLower }}sPb }, nil
+}
+
+func (s *{{ .EntityName }}ServiceServer) Get{{ .EntityName }}(ctx context.Context, request *proto.Get{{ .EntityName }}Request) (*proto.Get{{ .EntityName }}Response, error) {
+	{{ .EntityName | ToLower }}, err := s.q.Get{{ .EntityName }}(ctx, request.Id)
+	if err != nil {
+		s.logger.Errorf("Error getting {{ .EntityName | ToLower }}", zap.Error(err))
+		return nil, err
+	}
+
+	return &proto.Get{{ .EntityName }}Response{ {{ .EntityName }}: {{ .EntityName | ToLower }}.Pb() }, nil
+}
+
+func (s *{{ .EntityName }}ServiceServer) Create{{ .EntityName }}(ctx context.Context, request *proto.Create{{ .EntityName }}Request) (*proto.Create{{ .EntityName }}Response, error) {
+	{{ .EntityName | ToLower }}, err := s.q.Create{{ .EntityName }}(ctx, sqlc.Create{{ .EntityName }}Params{
+		// TODO: Add fields
+	})
+
+	if err != nil {
+		s.logger.Errorf("Error creating {{ .EntityName | ToLower }}", zap.Error(err))
+		return nil, err
+	}
+
+	return &proto.Create{{ .EntityName }}Response{ {{ .EntityName }}: {{ .EntityName | ToLower }}.Pb()}, nil
+}
+
+func (s *{{ .EntityName }}ServiceServer) Update{{ .EntityName }}(ctx context.Context, request *proto.Update{{ .EntityName }}Request) (*proto.Update{{ .EntityName }}Response, error) {
+	{{ .EntityName | ToLower }}, err := s.q.Update{{ .EntityName }}(ctx, sqlc.Update{{ .EntityName }}Params{
+		// TODO: Add fields
+	})
+
+	if err != nil {
+		s.logger.Errorf("Error updating {{ .EntityName | ToLower }}", zap.Error(err))
+		return nil, err
+	}
+
+	return &proto.Update{{ .EntityName }}Response{ {{ .EntityName }}: {{ .EntityName | ToLower }}.Pb() }, nil
+}
+
+func (s *{{ .EntityName }}ServiceServer) Delete{{ .EntityName }}(ctx context.Context, request *proto.Delete{{ .EntityName }}Request) (*emptypb.Empty, error) {
+	err := s.q.Delete{{ .EntityName }}(ctx, request.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}

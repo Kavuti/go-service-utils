@@ -1,0 +1,21 @@
+-- name: List{{ .EntityName }} :many
+SELECT * FROM {{ .EntityName | ToLower }} ORDER BY id LIMIT sqlc.narg('limit') OFFSET sqlc.narg('offset');
+
+-- name: Get{{ .EntityName }} :one
+SELECT * FROM {{ .EntityName | ToLower }}
+WHERE id = $1 LIMIT 1;
+
+-- name: Create{{ .EntityName }} :one
+INSERT INTO {{ .EntityName | ToLower }} () -- TODO: Add fields
+VALUES ($1, $2, $3, $4)
+RETURNING *;
+
+-- name: Update{{ .EntityName }} :one
+UPDATE {{ .EntityName | ToLower }}
+SET -- TODO: Add fields
+WHERE id = $1
+RETURNING *;
+
+-- name: Delete{{ .EntityName }} :exec
+DELETE FROM {{ .EntityName | ToLower }}
+WHERE id = $1;
