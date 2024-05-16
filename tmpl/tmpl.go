@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+
+	"golang.org/x/text/cases"
 )
 
 func main() {
@@ -31,13 +33,13 @@ func main() {
 	flag.Parse()
 
 	// Protobuf template
-	renderTemplate(directory, projectDirectory+"/proto", *entityName, *projectName, "proto.tmpl", strings.ToLower(*entityName), "proto")
+	renderTemplate(directory, projectDirectory+"/proto", cases.Title(*entityName), *projectName, "proto.tmpl", strings.ToLower(*entityName), "proto")
 
 	// Service template
-	renderTemplate(directory, projectDirectory+"/service", *entityName, *projectName, "service.tmpl", strings.ToLower(*entityName), "go")
+	renderTemplate(directory, projectDirectory+"/service", cases.Title(*entityName), *projectName, "service.tmpl", strings.ToLower(*entityName), "go")
 
 	// SQLC queries template
-	renderTemplate(directory, projectDirectory+"/db/queries", *entityName, *projectName, "sqlc_queries.tmpl", strings.ToLower(*entityName), "sql")
+	renderTemplate(directory, projectDirectory+"/db/queries", cases.Title(*entityName), *projectName, "sqlc_queries.tmpl", strings.ToLower(*entityName), "sql")
 
 	// Migration
 	r, _ := regexp.Compile("[0-9]{4}")
