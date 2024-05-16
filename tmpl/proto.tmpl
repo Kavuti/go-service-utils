@@ -36,44 +36,44 @@ message Delete{{ .EntityName }}Request {
     // TODO: Add fields
 }
 
-message List{{ .EntityName }}sRequest {
+message List{{ .EntityName }}Request {
     // TODO: Add fields
 }
 
-message List{{ .EntityName }}sResponse {
-    repeated {{ .EntityName }} {{ .EntityName | ToLower }}s = 1;
+message List{{ .EntityName }}Response {
+    repeated {{ .EntityName }} {{ .EntityName | ToLower }} = 1;
 }
 
 service {{ .EntityName }}Service {
-    rpc List{{ .EntityName }}s(List{{ .EntityName }}sRequest) returns (List{{ .EntityName }}sResponse) {
+    rpc List{{ .EntityName }}(List{{ .EntityName }}Request) returns (List{{ .EntityName }}Response) {
         option (google.api.http) = {
-            get: "/{{ .EntityName | ToLower }}s"
+            get: "/{{ .EntityName | ToLower }}"
         };
     }
 
     rpc Get{{ .EntityName }}(Get{{ .EntityName }}Request) returns (Get{{ .EntityName }}Response) {
         option (google.api.http) = {
-            get: "/{{ .EntityName | ToLower }}s/{id}"
+            get: "/{{ .EntityName | ToLower }}/{id}"
         };
     }
 
     rpc Create{{ .EntityName }}(Create{{ .EntityName }}Request) returns (Create{{ .EntityName }}Response) {
         option (google.api.http) = {
-            post: "/{{ .EntityName | ToLower }}s"
+            post: "/{{ .EntityName | ToLower }}"
             body: "*"
         };
     }
 
     rpc Update{{ .EntityName }}(Update{{ .EntityName }}Request) returns (Update{{ .EntityName }}Response) {
         option (google.api.http) = {
-            put: "/{{ .EntityName | ToLower }}s/{id}"
+            put: "/{{ .EntityName | ToLower }}/{id}"
             body: "*"
         };
     }
 
     rpc Delete{{ .EntityName }}(Delete{{ .EntityName }}Request) returns (google.protobuf.Empty) {
         option (google.api.http) = {
-            delete: "/{{ .EntityName | ToLower }}s/{id}"
+            delete: "/{{ .EntityName | ToLower }}/{id}"
         };
     }
 }

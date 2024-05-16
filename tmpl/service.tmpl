@@ -23,21 +23,21 @@ func New{{ .EntityName }}ServiceServer(logger *zap.SugaredLogger, dbpool *pgxpoo
 		logger: logger,
 	}
 }
-func (s *{{ .EntityName }}ServiceServer) List{{ .EntityName }}s(ctx context.Context, request *proto.List{{ .EntityName }}sRequest) (*proto.List{{ .EntityName }}sResponse, error) {
-	params := sqlc.List{{ .EntityName }}sParams{
+func (s *{{ .EntityName }}ServiceServer) List{{ .EntityName }}(ctx context.Context, request *proto.List{{ .EntityName }}Request) (*proto.List{{ .EntityName }}Response, error) {
+	params := sqlc.List{{ .EntityName }}Params{
 		Limit:  request.Limit,
 		Offset: request.Offset,
 	}
-	{{ .EntityName | ToLower }}s, err := s.q.List{{ .EntityName }}s(context.TODO(), params)
+	{{ .EntityName | ToLower }}, err := s.q.List{{ .EntityName }}(context.TODO(), params)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "Unable to retrieve {{ .EntityName | ToLower }}s")
+		return nil, status.Error(codes.Internal, "Unable to retrieve {{ .EntityName | ToLower }}")
 	}
 
-	var {{ .EntityName | ToLower }}sPb []*proto.{{ .EntityName }}
-	for _, {{ .EntityName | ToLower }} := range {{ .EntityName | ToLower }}s {
-		{{ .EntityName | ToLower }}sPb = append({{ .EntityName | ToLower }}sPb, {{ .EntityName | ToLower }}.Pb())
+	var {{ .EntityName | ToLower }}Pb []*proto.{{ .EntityName }}
+	for _, {{ .EntityName | ToLower }} := range {{ .EntityName | ToLower }} {
+		{{ .EntityName | ToLower }}Pb = append({{ .EntityName | ToLower }}Pb, {{ .EntityName | ToLower }}.Pb())
 	}
-	return &proto.List{{ .EntityName }}sResponse{ {{ .EntityName }}s: {{ .EntityName | ToLower }}sPb }, nil
+	return &proto.List{{ .EntityName }}Response{ {{ .EntityName }}: {{ .EntityName | ToLower }}Pb }, nil
 }
 
 func (s *{{ .EntityName }}ServiceServer) Get{{ .EntityName }}(ctx context.Context, request *proto.Get{{ .EntityName }}Request) (*proto.Get{{ .EntityName }}Response, error) {
