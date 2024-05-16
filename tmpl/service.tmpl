@@ -3,10 +3,12 @@ package service
 import (
 	"context"
 
-	"github.com/Kavuti/go-template-test/gen/proto"
-	"github.com/Kavuti/go-template-test/sqlc"
+	"github.com/Kavuti/{{ .ProjectName }}gen/proto"
+	"github.com/Kavuti/{{ .ProjectName }}sqlc"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -28,7 +30,7 @@ func (s *{{ .EntityName }}ServiceServer) List{{ .EntityName }}s(ctx context.Cont
 	}
 	{{ .EntityName | ToLower }}s, err := s.q.List{{ .EntityName }}s(context.TODO(), params)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "Unable to retrieve {{ .EntityName | ToLower }}s")
 	}
 
 	var {{ .EntityName | ToLower }}sPb []*proto.{{ .EntityName }}
@@ -42,7 +44,7 @@ func (s *{{ .EntityName }}ServiceServer) Get{{ .EntityName }}(ctx context.Contex
 	{{ .EntityName | ToLower }}, err := s.q.Get{{ .EntityName }}(ctx, request.Id)
 	if err != nil {
 		s.logger.Errorf("Error getting {{ .EntityName | ToLower }}", zap.Error(err))
-		return nil, err
+		return nil, status.Error(codes.Internal, "Unable to retrieve {{ .EntityName | ToLower }}")
 	}
 
 	return &proto.Get{{ .EntityName }}Response{ {{ .EntityName }}: {{ .EntityName | ToLower }}.Pb() }, nil
@@ -55,7 +57,7 @@ func (s *{{ .EntityName }}ServiceServer) Create{{ .EntityName }}(ctx context.Con
 
 	if err != nil {
 		s.logger.Errorf("Error creating {{ .EntityName | ToLower }}", zap.Error(err))
-		return nil, err
+		return nil, status.Error(codes.Internal, "Unable to create {{ .EntityName | ToLower }}")
 	}
 
 	return &proto.Create{{ .EntityName }}Response{ {{ .EntityName }}: {{ .EntityName | ToLower }}.Pb()}, nil
@@ -68,7 +70,7 @@ func (s *{{ .EntityName }}ServiceServer) Update{{ .EntityName }}(ctx context.Con
 
 	if err != nil {
 		s.logger.Errorf("Error updating {{ .EntityName | ToLower }}", zap.Error(err))
-		return nil, err
+		return nil, status.Error(codes.Internal, "Unable to update {{ .EntityName | ToLower }}")
 	}
 
 	return &proto.Update{{ .EntityName }}Response{ {{ .EntityName }}: {{ .EntityName | ToLower }}.Pb() }, nil
@@ -77,7 +79,7 @@ func (s *{{ .EntityName }}ServiceServer) Update{{ .EntityName }}(ctx context.Con
 func (s *{{ .EntityName }}ServiceServer) Delete{{ .EntityName }}(ctx context.Context, request *proto.Delete{{ .EntityName }}Request) (*emptypb.Empty, error) {
 	err := s.q.Delete{{ .EntityName }}(ctx, request.Id)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "Unable to delete {{ .EntityName | ToLower }}")
 	}
 	return &emptypb.Empty{}, nil
 }
