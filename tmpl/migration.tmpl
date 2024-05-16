@@ -1,7 +1,7 @@
 -- +goose Up
-CREATE TABLE IF NOT EXISTS {{ .EntityName | ToLower }} (
+CREATE TABLE IF NOT EXISTS {{ .EntityName | ToLower }}s (
     -- TODO: Add fields
 );
 
 -- +goose Down
-DROP TABLE IF EXISTS {{ .EntityName | ToLower }};
+DROP TABLE IF EXISTS {{ .EntityName | ToLower }}s;
