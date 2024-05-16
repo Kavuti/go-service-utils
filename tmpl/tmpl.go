@@ -14,6 +14,7 @@ import (
 	"text/template"
 
 	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func main() {
@@ -32,14 +33,16 @@ func main() {
 	projectName := flag.String("project-name", filepath.Base(projectDirectory), "The project name")
 	flag.Parse()
 
+	capitalizedEntityName := cases.Title(language.English, cases.Compact).String(*entityName)
+
 	// Protobuf template
-	renderTemplate(directory, projectDirectory+"/proto", cases.Title(*entityName), *projectName, "proto.tmpl", strings.ToLower(*entityName), "proto")
+	renderTemplate(directory, projectDirectory+"/proto", capitalizedEntityName, *projectName, "proto.tmpl", strings.ToLower(*entityName), "proto")
 
 	// Service template
-	renderTemplate(directory, projectDirectory+"/service", cases.Title(*entityName), *projectName, "service.tmpl", strings.ToLower(*entityName), "go")
+	renderTemplate(directory, projectDirectory+"/service", capitalizedEntityName, *projectName, "service.tmpl", strings.ToLower(*entityName), "go")
 
 	// SQLC queries template
-	renderTemplate(directory, projectDirectory+"/db/queries", cases.Title(*entityName), *projectName, "sqlc_queries.tmpl", strings.ToLower(*entityName), "sql")
+	renderTemplate(directory, projectDirectory+"/db/queries", capitalizedEntityName, *projectName, "sqlc_queries.tmpl", strings.ToLower(*entityName), "sql")
 
 	// Migration
 	r, _ := regexp.Compile("[0-9]{4}")
@@ -57,7 +60,7 @@ func main() {
 		}
 		return nil
 	})
-	renderTemplate(directory, projectDirectory+"/db/migrations", *entityName, *projectName, "migration.tmpl", fmt.Sprintf("%04d_%s", maxNumber+1, strings.ToLower(*entityName)), "sql")
+	renderTemplate(directory, projectDirectory+"/db/migrations", capitalizedEntityName, *projectName, "migration.tmpl", fmt.Sprintf("%04d_%s", maxNumber+1, strings.ToLower(*entityName)), "sql")
 }
 
 func renderTemplate(directory string, destinationDirectory string, entityName string, projectName string, templateName string, filename string, fileext string) {
