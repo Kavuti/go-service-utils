@@ -28,7 +28,7 @@ func (s *{{ .EntityName }}ServiceServer) List{{ .EntityName }}(ctx context.Conte
 		Limit:  request.Limit,
 		Offset: request.Offset,
 	}
-	{{ .EntityName | ToLower }}, err := s.q.List{{ .EntityName }}(context.TODO(), params)
+	{{ .EntityName | ToLower }}, err := s.q.List{{ .EntityName }}(ctx, params)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Unable to retrieve {{ .EntityName | ToLower }}")
 	}
